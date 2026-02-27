@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Cosmix</title>
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Press+Start+2P&family=Share+Tech+Mono&family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=VT323&display=swap" rel="stylesheet" />
+
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+
+  <!-- ░░ STAR CANVAS BACKGROUND ░░ -->
+  <canvas id="starfield" aria-hidden="true"></canvas>
+
+  <!-- ░░ CRT SCANLINE OVERLAY ░░ -->
+  <div id="crt-overlay" class="crt-overlay" aria-hidden="true"></div>
+
+  <!-- ░░ CUSTOM CURSOR ░░ -->
+  <div id="cursor-dot"   class="cursor-dot"   aria-hidden="true"></div>
+  <div id="cursor-ring"  class="cursor-ring"  aria-hidden="true"></div>
+
+  <!-- ░░ AUDIO ░░ -->
+  <audio id="bg-music" loop preload="none"></audio>
+
+  <!-- ░░ TOAST NOTIFICATION ░░ -->
+  <div id="toast" class="toast" aria-live="polite"></div>
+
+  <!-- ░░ KEYBOARD SHORTCUTS PANEL ░░ -->
+  <div id="shortcuts-panel" class="shortcuts-panel" aria-hidden="true">
+    <div class="shortcuts-inner">
+      <div class="shortcuts-header">
+        <span class="pixel">[ KEYBOARD SHORTCUTS ]</span>
+        <button id="shortcuts-close" class="shortcuts-close" aria-label="Close shortcuts" title="Close">✕</button>
+      </div>
+      <div id="shortcuts-list" class="shortcuts-list"></div>
+      <p class="shortcuts-hint">Press <kbd>?</kbd> or <kbd>ESC</kbd> to toggle this panel</p>
+    </div>
+  </div>
+  <div id="shortcuts-backdrop" class="shortcuts-backdrop" aria-hidden="true"></div>
+
+  <!-- ═══════════════════════════════════════ -->
+  <!--              PAGE WRAPPER               -->
+  <!-- ═══════════════════════════════════════ -->
+  <div class="page-wrapper">
+
+    <!-- ─── TOOLBAR ─── -->
+    <nav class="toolbar" aria-label="Controls">
+      <span class="toolbar-title" id="site-title">COSMIX</span>
+      <div class="toolbar-controls">
+        <button id="btn-crt"   class="ctrl-btn" title="Toggle CRT scanlines" aria-pressed="false">
+          <span class="ctrl-icon">▦</span><span class="ctrl-label">CRT</span>
+        </button>
+        <button id="btn-theme" class="ctrl-btn" title="Toggle sepia mode" aria-pressed="false">
+          <span class="ctrl-icon">◑</span><span class="ctrl-label">SEPIA</span>
+        </button>
+        <button id="btn-music" class="ctrl-btn" title="Toggle background music" aria-pressed="false">
+          <span class="ctrl-icon">♪</span><span class="ctrl-label music-label">MUSIC</span>
+        </button>
+        <button id="btn-shortcuts" class="ctrl-btn" title="Show keyboard shortcuts (?)">
+          <span class="ctrl-icon">⌨</span><span class="ctrl-label">KEYS</span>
+        </button>
+      </div>
+    </nav>
+
+    <!-- ─── VINTAGE HERO BANNER ─── -->
+    <div class="hero-banner" role="img" aria-label="Hero banner">
+      <p class="hero-eyebrow">Welcome to my personal Domain</p>
+      <h1 id="hero-title" class="hero-title">VINTAGE <em>MADE</em> DAILY</h1>
+      <div class="hero-tagline">
+        <span>YOUR</span>
+        <span class="hero-tagline-badge">OPEN NOW</span>
+        <span>PORTAL</span>
+      </div>
+    </div>
+
+    <!-- ─── HEADER: CLOCK + GREETING ─── -->
+    <header class="site-header" role="banner">
+      <div class="header-glow-bar" aria-hidden="true"></div>
+
+      <div class="clock-block">
+        <div id="clock"   class="clock"   aria-live="polite" aria-label="Current time"></div>
+        <div id="date-display" class="date-display" aria-live="polite" aria-label="Current date"></div>
+      </div>
+
+      <div class="greeting-block">
+        <p id="greeting" class="greeting"></p>
+        <p class="greeting-sub serif-italic">Your portal is ready.</p>
+      </div>
+
+      <div class="header-decoration" aria-hidden="true">
+        <span class="deco-line"></span>
+        <span class="deco-diamond">◆</span>
+        <span class="deco-line"></span>
+      </div>
+    </header>
+
+    <!-- ─── MAIN GRID ─── -->
+    <main id="link-grid" class="link-grid" role="main" aria-label="Quick links"></main>
+
+    <!-- ─── SEARCH BAR ─── -->
+    <section class="search-section" aria-label="Search">
+      <div class="search-wrapper">
+        <div class="search-engine-toggle" role="group" aria-label="Search engine">
+          <button class="engine-btn active" data-engine="google"     title="Search with Google">G</button>
+          <button class="engine-btn"        data-engine="duckduckgo" title="Search with DuckDuckGo">DDG</button>
+        </div>
+        <form id="search-form" class="search-form" role="search" aria-label="Web search">
+          <label for="search-input" class="sr-only">Search the web</label>
+          <input
+            id="search-input"
+            class="search-input"
+            type="search"
+            placeholder="search the web..."
+            autocomplete="off"
+            spellcheck="false"
+            aria-label="Search query"
+          />
+          <button type="submit" class="search-btn" aria-label="Submit search">
+            <span aria-hidden="true">▶</span>
+          </button>
+        </form>
+      </div>
+    </section>
+
+    <!-- ─── TERMINAL WIDGET ─── -->
+    <section class="terminal-section" aria-label="Terminal">
+      <div class="terminal-window" id="terminal-window">
+
+        <div class="terminal-titlebar" id="terminal-titlebar">
+          <div class="terminal-dots">
+            <div class="terminal-dot" id="term-dot-close"  title="Clear"></div>
+            <div class="terminal-dot" id="term-dot-min"    title="Minimize"></div>
+            <div class="terminal-dot" id="term-dot-max"    title="Maximize"></div>
+          </div>
+          <span class="terminal-name">RETRO://TERMINAL  —  bash</span>
+          <div class="terminal-actions">
+            <button class="term-action-btn" id="term-btn-clear" title="Clear terminal">CLR</button>
+            <button class="term-action-btn" id="term-btn-help"  title="Show help">HELP</button>
+          </div>
+        </div>
+
+        <div class="terminal-body" id="terminal-body" aria-live="polite" aria-label="Terminal output"></div>
+
+        <div class="terminal-input-row">
+          <span class="term-prompt-symbol" aria-hidden="true">&#x276F;&nbsp;</span>
+          <input
+            id="terminal-input"
+            class="terminal-input"
+            type="text"
+            placeholder="type a command..."
+            autocomplete="off"
+            spellcheck="false"
+            aria-label="Terminal input"
+          />
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ─── FOOTER ─── -->
+    <footer class="site-footer" role="contentinfo">
+      <div class="footer-top-line" aria-hidden="true"></div>
+      <div class="marquee-wrap" aria-label="Marquee message" role="marquee">
+        <div id="marquee-track" class="marquee-track"></div>
+      </div>
+      <p class="footer-credit pixel">
+        &lt;/&gt; handcrafted with nostalgia &nbsp;·&nbsp; EST. <span id="footer-year"></span>
+      </p>
+    </footer>
+
+  </div><!-- /.page-wrapper -->
+
+  <!-- Scripts: data first, then app -->
+  <script src="data/links.js"></script>
+  <script src="js/main.js"></script>
+</body>
+</html>
