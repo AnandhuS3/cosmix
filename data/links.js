@@ -38,7 +38,7 @@ const LINKS = [
     icon: "♫",
     items: [
       { label: "Spotify",       url: "https://open.spotify.com",                shortcut: "S" },
-      { label: "Playlist 01",   url: "https://open.spotify.com/playlist/37i9dQZF1DX688wU47emR9/",      shortcut: "P" },
+      { label: "malayalam",   url: "https://open.spotify.com/playlist/37i9dQZF1DX688wU47emR9/",      shortcut: "P" },
       { label: "Playlist 02",   url: "https://open.spotify.com/playlist/",      shortcut: null },
       { label: "SoundCloud",    url: "https://soundcloud.com",                  shortcut: null },
     ],
