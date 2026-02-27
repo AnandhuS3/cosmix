@@ -555,7 +555,7 @@ window.addEventListener('load', () => {
       '  ╚═╝  ╚═╝╚══════╝   ╚═╝   ╚═╝  ╚═╝ ╚═════╝ ',
     ];
     lines.forEach(l => line(l, 'banner'));
-    line('  COSMIX://TERMINAL  v1.0.0  —  Your Personal Portal', 'info');
+    line('  COSMIX://TERMINAL  v1.0.0  —  My Personal Portal', 'info');
     line('', 'muted');
     line('  Type  help  for available commands.', 'muted');
     blank();
@@ -772,4 +772,167 @@ window.addEventListener('load', () => {
   // ── Boot ──
   printBanner();
   input.focus();
+})();
+
+
+/* ═══════════════════════════════════════════════════
+   17. MUSIC PLAYER WIDGET
+   ═══════════════════════════════════════════════════ */
+(function initMusicPlayer() {
+
+  const PLATFORMS = {
+    spotify: {
+      label:    'SPOTIFY',
+      url:      'https://open.spotify.com',
+      badge:    'mp-badge-spotify',
+      track:    'Liked Songs',
+      artist:   'Your Library — Spotify',
+      logo:     'S',
+    },
+    malayalam: {
+      label:    'MALAYALAM',
+      url:      'https://open.spotify.com/playlist/37i9dQZF1DX688wU47emR9/',
+      badge:    'mp-badge-malayalam',
+      track:    'Malayalam Hits',
+      artist:   'Hot Hits Malayalam — Spotify',
+      logo:     '♫',
+    },
+    youtubemusic: {
+      label:    'YT MUSIC',
+      url:      'https://music.youtube.com',
+      badge:    'mp-badge-youtubemusic',
+      track:    'YouTube Music',
+      artist:   'Your Mixes — YouTube Music',
+      logo:     'Y',
+    },
+  };
+
+  // Elements
+  const tabs      = $$('.mp-tab');
+  const badge     = $('#mp-badge');
+  const trackEl   = $('#mp-track');
+  const artistEl  = $('#mp-artist');
+  const fill      = $('#mp-fill');
+  const timeCur   = $('#mp-time-cur');
+  const playBtn   = $('#mp-play');
+  const playIcon  = $('#mp-play-icon');
+  const heartBtn  = $('#mp-heart');
+  const openLink  = $('#mp-open-link');
+  const vinyl     = $('.mp-vinyl');
+  const vinylLbl  = $('.mp-vinyl-label');
+
+  if (!playBtn) return;
+
+  let currentPlatform = 'spotify';
+  let playing  = false;
+  let liked    = false;
+  let progress = 0;
+  let ticker   = null;
+
+  // ── Set platform ──
+  function setPlatform(key) {
+    currentPlatform = key;
+    const p = PLATFORMS[key];
+
+    // Tabs
+    tabs.forEach(t => {
+      t.classList.toggle('active', t.dataset.platform === key);
+      t.setAttribute('aria-selected', t.dataset.platform === key);
+    });
+
+    // Meta
+    badge.textContent = p.label;
+    badge.className   = 'mp-platform-badge ' + p.badge;
+    trackEl.textContent  = p.track;
+    artistEl.textContent = p.artist;
+    vinylLbl.setAttribute('data-logo', p.logo);
+    openLink.href = p.url;
+
+    // If playing, redirect and keep playing visual
+    if (playing) {
+      window.open(p.url, '_blank', 'noopener,noreferrer');
+    }
+  }
+
+  // ── Progress tick ──
+  function startTick() {
+    clearInterval(ticker);
+    ticker = setInterval(() => {
+      progress = (progress + 0.18) % 100;
+      fill.style.width = progress + '%';
+      // Fake time: map progress 0-100 to 0-3:30
+      const totalSec = 210;
+      const cur      = Math.floor((progress / 100) * totalSec);
+      const m        = Math.floor(cur / 60);
+      const s        = cur % 60;
+      timeCur.textContent = `${m}:${pad(s)}`;
+    }, 400);
+  }
+
+  function stopTick() {
+    clearInterval(ticker);
+  }
+
+  // ── Play button ──
+  playBtn.addEventListener('click', () => {
+    if (!playing) {
+      // Open the platform
+      window.open(PLATFORMS[currentPlatform].url, '_blank', 'noopener,noreferrer');
+      playing = true;
+      playIcon.textContent = '⏸';
+      playBtn.classList.add('playing');
+      vinyl.classList.add('spinning');
+      startTick();
+      showToast(`♪ Opening ${PLATFORMS[currentPlatform].label}`);
+    } else {
+      playing = false;
+      playIcon.textContent = '▶';
+      playBtn.classList.remove('playing');
+      vinyl.classList.remove('spinning');
+      stopTick();
+    }
+  });
+
+  // ── Prev / Next — redirect to platform ──
+  $('#mp-prev').addEventListener('click', () => {
+    window.open(PLATFORMS[currentPlatform].url, '_blank', 'noopener,noreferrer');
+    showToast(`⏮ ${PLATFORMS[currentPlatform].label}`);
+  });
+  $('#mp-next').addEventListener('click', () => {
+    window.open(PLATFORMS[currentPlatform].url, '_blank', 'noopener,noreferrer');
+    showToast(`⏭ ${PLATFORMS[currentPlatform].label}`);
+  });
+
+  // ── Shuffle ──
+  $('#mp-shuffle').addEventListener('click', () => {
+    const keys   = Object.keys(PLATFORMS);
+    const random = keys[Math.floor(Math.random() * keys.length)];
+    setPlatform(random);
+    showToast('⇌ Shuffled platform');
+  });
+
+  // ── Heart ──
+  heartBtn.addEventListener('click', () => {
+    liked = !liked;
+    heartBtn.textContent = liked ? '♥' : '♡';
+    heartBtn.classList.toggle('liked', liked);
+    showToast(liked ? '♥ Added to liked' : '♡ Removed from liked');
+  });
+
+  // ── Progress bar click (scrub visual) ──
+  $('.mp-progress-bar').addEventListener('click', e => {
+    const rect = e.currentTarget.getBoundingClientRect();
+    progress   = ((e.clientX - rect.left) / rect.width) * 100;
+    fill.style.width = progress + '%';
+  });
+
+  // ── Tabs ──
+  tabs.forEach(tab => {
+    tab.addEventListener('click', () => setPlatform(tab.dataset.platform));
+  });
+
+  // ── Init ──
+  setPlatform('spotify');
+  timeCur.textContent  = '0:00';
+
 })();
