@@ -1,5 +1,5 @@
 /* ═══════════════════════════════════════════════════════════════
-   RETRO DAILY — Main Stylesheet
+   COSMIX — Main Stylesheet
    Theme: Modern Vintage · Dark Sepia · Warm Rust
    ═══════════════════════════════════════════════════════════════ */
 
@@ -166,8 +166,7 @@ body::after {
 }
 
 /* ─── 5. CUSTOM CURSOR ─── */
-.cursor-dot,
-.cursor-ring {
+.cursor-dot {
   position: fixed;
   top: 0;
   left: 0;
@@ -175,16 +174,12 @@ body::after {
   z-index: 9999;
   transform: translate(-50%, -50%);
   transition: opacity 0.3s;
-}
-
-.cursor-dot {
   width: 48px;
   height: 48px;
   background: url('../assets/luffy.png') center / contain no-repeat;
   border-radius: 0;
   box-shadow: none;
-  transition: transform 0.05s linear, width 0.18s ease, height 0.18s ease;
-  image-rendering: pixelated;   /* keeps sprite crisp at any size */
+  image-rendering: pixelated;
   filter: drop-shadow(0 2px 6px rgba(196,114,90,0.55));
 }
 
@@ -192,23 +187,6 @@ body.cursor-hover .cursor-dot {
   width: 56px;
   height: 56px;
   filter: drop-shadow(0 0 10px rgba(196,114,90,0.85)) brightness(1.15);
-}
-
-.cursor-ring {
-  width: 62px;
-  height: 62px;
-  border: 1.5px solid var(--accent);
-  border-radius: 0;
-  box-shadow: 0 0 8px var(--accent-dark);
-  transition: transform 0.12s var(--ease), width 0.2s var(--ease), height 0.2s var(--ease);
-}
-
-/* Enlarge ring on hoverables */
-body.cursor-hover .cursor-ring {
-  width: 80px;
-  height: 80px;
-  border-color: var(--neon);
-  box-shadow: 0 0 14px var(--neon-glow);
 }
 
 /* ─── 6. PAGE WRAPPER ─── */

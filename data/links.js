@@ -1,5 +1,5 @@
 /**
- * RETRO DAILY — Link Data
+ * COSMIX — Link Data
  * Edit this file to update your links, labels, and keyboard shortcuts.
  *
  * Each category renders as one grid section.
@@ -9,7 +9,7 @@
  */
 
 const SITE_CONFIG = {
-  title: "RETRO://DAILY",
+  title: "COSMIX",
   owner: "Anandhu",
   marqueeText:
     "★ Welcome to my personal portal  ★  The internet, but make it yours  ★  Stay focused. Stay retro.  ★  All systems nominal  ★  Loading memories...  ★",

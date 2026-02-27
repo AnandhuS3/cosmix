@@ -1,5 +1,5 @@
 /**
- * RETRO DAILY — Main Application Script
+ * COSMIX — Main Application Script
  * Pure vanilla JS — no frameworks, no dependencies.
  */
 
@@ -75,47 +75,21 @@ function showToast(msg, duration = 2000) {
    3. CUSTOM CURSOR
    ═══════════════════════════════════════════════════ */
 (function initCursor() {
-  const dot  = $('#cursor-dot');
-  const ring = $('#cursor-ring');
-
-  let mx = -100, my = -100;
-  let rx = -100, ry = -100;
-  const RING_LAG = 0.11;
+  const dot = $('#cursor-dot');
 
   document.addEventListener('mousemove', e => {
-    mx = e.clientX;
-    my = e.clientY;
-    dot.style.left = mx + 'px';
-    dot.style.top  = my + 'px';
+    dot.style.left = e.clientX + 'px';
+    dot.style.top  = e.clientY + 'px';
   });
 
-  document.addEventListener('mouseleave', () => {
-    dot.style.opacity  = '0';
-    ring.style.opacity = '0';
-  });
+  document.addEventListener('mouseleave', () => { dot.style.opacity = '0'; });
+  document.addEventListener('mouseenter', () => { dot.style.opacity = '1'; });
 
-  document.addEventListener('mouseenter', () => {
-    dot.style.opacity  = '1';
-    ring.style.opacity = '1';
-  });
-
-  // Detect hover over interactive elements to enlarge ring
+  // Scale up image on hover over interactive elements
   document.addEventListener('mouseover', e => {
     const el = e.target.closest('a, button, input, [role="button"]');
     document.body.classList.toggle('cursor-hover', !!el);
   });
-
-  // Smooth trailing ring
-  function lerp(a, b, t) { return a + (b - a) * t; }
-
-  function animate() {
-    rx = lerp(rx, mx, RING_LAG);
-    ry = lerp(ry, my, RING_LAG);
-    ring.style.left = rx + 'px';
-    ring.style.top  = ry + 'px';
-    requestAnimationFrame(animate);
-  }
-  animate();
 })();
 
 
@@ -384,12 +358,12 @@ document.addEventListener('DOMContentLoaded', () => {
   const html = document.documentElement;
 
   // Restore saved preference
-  const saved = localStorage.getItem('retro-theme');
+  const saved = localStorage.getItem('cosmix-theme');
   if (saved) html.dataset.theme = saved;
 
   function setTheme(theme) {
     html.dataset.theme = theme;
-    localStorage.setItem('retro-theme', theme);
+    localStorage.setItem('cosmix-theme', theme);
     const isDark = theme === 'dark';
     btn.setAttribute('aria-pressed', isDark);
     showToast(isDark ? '◑ DARK MODE' : '◑ VINTAGE SEPIA');
@@ -581,7 +555,7 @@ window.addEventListener('load', () => {
       '  ╚═╝  ╚═╝╚══════╝   ╚═╝   ╚═╝  ╚═╝ ╚═════╝ ',
     ];
     lines.forEach(l => line(l, 'banner'));
-    line('  RETRO://TERMINAL  v1.0.0  —  Your Personal Portal', 'info');
+    line('  COSMIX://TERMINAL  v1.0.0  —  Your Personal Portal', 'info');
     line('', 'muted');
     line('  Type  help  for available commands.', 'muted');
     blank();
@@ -700,7 +674,7 @@ window.addEventListener('load', () => {
     about() {
       blank();
       line('  ┌────────────────────────────────────────────────┐', 'info');
-      line(`  │  RETRO://DAILY — Personal Start Page           │`, 'banner');
+      line(`  │  COSMIX — Personal Start Page                  │`, 'banner');
       line(`  │  Owner : ${(SITE_CONFIG.owner + '                           ').slice(0,37)}│`, 'muted');
       line(`  │  Stack : Pure HTML + CSS + Vanilla JS          │`, 'muted');
       line(`  │  Theme : Modern Vintage (Dark Sepia)           │`, 'muted');
